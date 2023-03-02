@@ -1,5 +1,7 @@
 import {
   Canvas,
+  ColorMatrix,
+  Group,
   Image,
   Rect,
   SkiaValue,
@@ -16,6 +18,21 @@ import {
   StyleSheet,
   Image as RNImage,
 } from 'react-native';
+
+const hexToColorMatrix = (hex: string) => {
+  const plainR = parseInt(hex.slice(1, 3), 16);
+  const plainG = parseInt(hex.slice(3, 5), 16);
+  const plainB = parseInt(hex.slice(5, 7), 16);
+  const r = parseFloat((plainR / 255).toFixed(3));
+  const g = parseFloat((plainG / 255).toFixed(3));
+  const b = parseFloat((plainB / 255).toFixed(3));
+  return [
+    [0, 0, 0, 0, r],
+    [0, 0, 0, 0, g],
+    [0, 0, 0, 0, b],
+    [0, 0, 0, 1, 0],
+  ].flat();
+};
 
 type ConfettiSkiaConfig = {
   colors: string[];
@@ -215,8 +232,9 @@ const Confetti = ({
         width={width}
         height={height}
         opacity={opacity}
-        transform={transform}
-      />
+        transform={transform}>
+        <ColorMatrix matrix={hexToColorMatrix(animationProps.color)} />
+      </Image>
     )
   );
 
